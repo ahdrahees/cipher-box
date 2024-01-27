@@ -1,0 +1,4 @@
+[dependencies]
+base = "0.10.3"
+map = "9.0.1"
+StableBuffer = "https://github.com/canscale/StableBuffer#v1.3.0@acdde6bb5b939227997cebdbb8919d2e6da8691c"

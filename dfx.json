@@ -5,20 +5,30 @@
 			"type": "motoko"
 		},
 		"frontend": {
-			"dependencies": ["backend"],
+			"dependencies": [
+				"backend"
+			],
 			"frontend": {
 				"entrypoint": "build/index.html"
 			},
-			"source": ["build/"],
+			"source": [
+				"build/"
+			],
 			"type": "assets"
 		}
 	},
 	"defaults": {
 		"build": {
 			"args": "",
-			"packtool": ""
+			"packtool": "mops sources"
 		}
 	},
 	"output_env_file": "src/frontend/.env",
+	"networks": {
+		"local": {
+			"bind": "0.0.0.0:8080",
+			"type": "ephemeral"
+		}
+	},
 	"version": 1
 }
