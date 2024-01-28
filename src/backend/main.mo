@@ -8,6 +8,7 @@ import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
 import Result "mo:base/Result";
+import Nat "mo:base/Nat";
 
 shared ({ caller = initializer }) actor class () {
 
@@ -61,7 +62,8 @@ shared ({ caller = initializer }) actor class () {
 				#ok(Utils.getTOTPS(totpMap, totpIdsBuffer));
 			};
 			case (null) {
-				#err("Could not find TOTP key");
+				// return #ok([]); // possible outputs
+				#err("You have no TOTP keys");
 			};
 		};
 	};
@@ -70,8 +72,35 @@ shared ({ caller = initializer }) actor class () {
 		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
 
 		let (?totpIdsBuffer) = Map.get(ownerTOTPIds, phash, caller) else return #err("Error: You have no TOTP keys");
-		// let (?idIndex) = StableBuffer.indexOF or StableBuffer.binarySearch
+		// let (?idIndex) = StableBuffer.indexOf(id, totpIdsBuffer, Nat.equal) else return #err("Error: Could not find TOTP key");
+		// binarySearch in this case very efficient because of our buffer will be always sorted becuase of the ids increasing in ascending order when user add new totps and it is added end of the buffer always
+		let (?idIndex) = StableBuffer.binarySearch(id, totpIdsBuffer, Nat.compare) else return #err("Error: Could not find TOTP key");
+
+		// Not necessory to Double check. directly can delete
+		// let (?totp) = Map.get(totpMap, nhash, id) else return #err("Error: Could not find TOTP key in Map");
+		// if (not Map.has(totpMap, nhash, id)) return #err("Error: Could not find TOTP key in Map");
+
+		let totpId = StableBuffer.remove(totpIdsBuffer, idIndex);
+		if (StableBuffer.size(totpIdsBuffer) == 0) { Map.delete(ownerTOTPIds, phash, caller) };
+		// Map.delete(totpMap, nhash, id);
+		let (?deletedTOTP) = Map.remove(totpMap, nhash, id) else return #err("Error: Could not find TOTP key in Map");
+		// #ok("Deleted");
 		#ok();
+	};
+
+	// returns all the TOTPS
+	public shared ({ caller }) func update_totp({ id; encryptedKey; encryptedName } : QueryTOTPs) : async Result<[QueryTOTPs], Text> {
+		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
+
+		let (?totpIdsBuffer) = Map.get(ownerTOTPIds, phash, caller) else return #err("Error: You have no TOTP keys");
+		let (?idIndex) = StableBuffer.binarySearch(id, totpIdsBuffer, Nat.compare) else return #err("Error: Could not find TOTP key to update");
+		// let (?totp) = Map.get(totpMap, nhash, id) else return #err("Error: Could not find TOTP key in Map");
+		let (?previousTOTP) = Map.replace(totpMap, nhash, id, { encryptedKey; encryptedName }) else {
+			return #err("Error: Could not find TOTP key in Map");
+		};
+		// returning all TOTPS including updated one
+		#ok(Utils.getTOTPS(totpMap, totpIdsBuffer));
+
 	};
 
 	public shared query ({ caller }) func cycle_balance() : async Nat {
