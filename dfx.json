@@ -1,20 +1,37 @@
 {
 	"canisters": {
+		"vetkd_system_api": {
+			"candid": "src/system_api/vetkd_system_api.did",
+			"type": "custom",
+			"wasm": "src/system_api/vetkd_system_api.wasm"
+		},
 		"backend": {
 			"main": "src/backend/main.mo",
-			"type": "motoko"
+			"type": "motoko",
+			"dependencies": ["vetkd_system_api"]
 		},
 		"frontend": {
-			"dependencies": [
-				"backend"
-			],
+			"dependencies": ["backend", "internet_identity"],
 			"frontend": {
 				"entrypoint": "build/index.html"
 			},
-			"source": [
-				"build/"
-			],
+			"source": ["build/"],
 			"type": "assets"
+		},
+		"internet_identity": {
+			"type": "custom",
+			"candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+			"wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz",
+			"remote": {
+				"id": {
+					"ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+				}
+			},
+			"frontend": {}
+		},
+		"internet-identity": {
+			"type": "pull",
+			"id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
 		}
 	},
 	"defaults": {
