@@ -18,20 +18,10 @@
 			"source": ["build/"],
 			"type": "assets"
 		},
-		"internet_identity": {
-			"type": "custom",
-			"candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
-			"wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz",
-			"remote": {
-				"id": {
-					"ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
-				}
-			},
-			"frontend": {}
-		},
 		"internet-identity": {
 			"type": "pull",
-			"id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+			"id": "rdmx6-jaaaa-aaaaa-aaadq-cai",
+			"frontend": {}
 		}
 	},
 	"defaults": {
@@ -43,7 +33,7 @@
 	"output_env_file": "src/frontend/.env",
 	"networks": {
 		"local": {
-			"bind": "0.0.0.0:8080",
+			"bind": "localhost:8080",
 			"type": "ephemeral"
 		}
 	},

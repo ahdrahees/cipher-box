@@ -92,14 +92,14 @@ shared ({ caller = initializer }) actor class () {
 		#ok();
 	};
 
-	public shared ({ caller }) func update_totp({ id; encryptedKey; encryptedName } : QueryTOTPs) : async Result<[QueryTOTPs], Text> {
+	public shared ({ caller }) func update_totp(totp : QueryTOTPs) : async Result<[QueryTOTPs], Text> {
 		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
 
 		let (?totpIdsBuffer) = Map.get(ownerTOTPIds, phash, caller) else return #err("Error: You have no TOTP keys");
-		let (?idIndex) = StableBuffer.binarySearch(id, totpIdsBuffer, Nat.compare) else return #err("Error: Could not find TOTP key to update");
+		let (?idIndex) = StableBuffer.binarySearch(totp.id, totpIdsBuffer, Nat.compare) else return #err("Error: Could not find TOTP key to update");
 		// let (?totp) = Map.get(totpMap, nhash, id) else return #err("Error: Could not find TOTP key in Map");
-		let (?previousTOTP) = Map.replace(totpMap, nhash, id, { encryptedKey; encryptedName }) else {
-			return #err("Error: Could not find TOTP key in Map");
+		let (?previousTOTP) = Map.replace(totpMap, nhash, totp.id, totp) else {
+			return #err("Error: Could not find TOTP key in Map to update");
 		};
 		// returning all TOTPS including updated one
 		#ok(Utils.getTOTPs(totpMap, totpIdsBuffer));

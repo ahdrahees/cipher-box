@@ -17,7 +17,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"localii": "dfx deps pull && dfx deps init --argument '(null)' internet-identity && dfx deps deploy"
 	},
 	"devDependencies": {
 		"@rollup/plugin-inject": "^5.0.5",
