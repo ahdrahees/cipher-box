@@ -43,7 +43,7 @@ const readCanisterIds = ({ prefix }: { prefix?: string }): Record<string, string
 const config: UserConfig = {
 	plugins: [sveltekit()],
 	build: {
-		target: 'es2020',
+		target: 'esnext',
 		rollupOptions: {
 			// Polyfill Buffer for production build
 			plugins: [

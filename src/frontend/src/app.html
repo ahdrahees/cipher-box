@@ -1,10 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" theme="dark" menu="expanded">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
+
+		<!-- Init theme as fast as possible -->
+		<script>
+			try {
+				const isDarkPreferred = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+				const currentTheme =
+					localStorage.nnsTheme === null ||
+					localStorage.nnsTheme === undefined ||
+					localStorage.nnsTheme === ''
+						? undefined
+						: JSON.parse(localStorage.nnsTheme);
+
+				document.documentElement.setAttribute(
+					'theme',
+					currentTheme ?? (isDarkPreferred ? 'dark' : 'light')
+				);
+			} catch (error) {
+				console.error('Error initializing theme', error);
+			}
+		</script>
+
+		<!-- Init menu as fast as possible as well -->
+		<script>
+			try {
+				const currentMenu = !localStorage.nnsMenu ? undefined : JSON.parse(localStorage.nnsMenu);
+
+				document.documentElement.setAttribute('menu', currentMenu ?? 'expanded');
+			} catch (error) {
+				console.error('Error initializing menu', error);
+			}
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

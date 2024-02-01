@@ -11,7 +11,7 @@
 			"dependencies": ["vetkd_system_api"]
 		},
 		"frontend": {
-			"dependencies": ["backend", "internet_identity"],
+			"dependencies": ["backend", "internet-identity"],
 			"frontend": {
 				"entrypoint": "build/index.html"
 			},
