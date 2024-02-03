@@ -22,7 +22,7 @@ shared ({ caller = initializer }) actor class () {
 	type TOTP = T.TOTP;
 	type Result<Ok, Err> = Result.Result<Ok, Err>;
 	type StableBuffer<T> = StableBuffer.StableBuffer<T>;
-	type QueryTOTPs = T.QueryTOTPs;
+	type QueryTOTP = T.QueryTOTP;
 	type PassId = T.PassId;
 	type Password = T.Password;
 	type QueryPassword = T.QueryPassword;
@@ -58,7 +58,7 @@ shared ({ caller = initializer }) actor class () {
 
 	};
 
-	public shared ({ caller }) func get_totps() : async Result<[QueryTOTPs], Text> {
+	public shared ({ caller }) func get_totps() : async Result<[QueryTOTP], Text> {
 		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
 
 		switch (Map.get(ownerTOTPIds, phash, caller)) {
@@ -92,7 +92,7 @@ shared ({ caller = initializer }) actor class () {
 		#ok();
 	};
 
-	public shared ({ caller }) func update_totp(totp : QueryTOTPs) : async Result<[QueryTOTPs], Text> {
+	public shared ({ caller }) func update_totp(totp : QueryTOTP) : async Result<[QueryTOTP], Text> {
 		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
 
 		let (?totpIdsBuffer) = Map.get(ownerTOTPIds, phash, caller) else return #err("Error: You have no TOTP keys");
@@ -123,7 +123,7 @@ shared ({ caller = initializer }) actor class () {
 		#ok(id);
 	};
 
-	public shared ({ caller }) func get_password() : async Result<[QueryPassword], Text> {
+	public shared ({ caller }) func get_passwords() : async Result<[QueryPassword], Text> {
 		if (Principal.isAnonymous(caller)) return #err("Anonymous caller not allowed");
 
 		switch (Map.get(ownerPassIds, phash, caller)) {

@@ -8,15 +8,15 @@ module {
 	// Types
 	type TOTPId = Nat;
 	type TOTP = T.TOTP;
-	type QueryTOTPs = T.QueryTOTPs;
+	type QueryTOTP = T.QueryTOTP;
 	type PassId = T.PassId;
 	type Password = T.Password;
 	type QueryPassword = T.QueryPassword;
 
 	let { phash; nhash } = Map;
 
-	public func getTOTPs(totpMap : T.Map<TOTPId, TOTP>, totpIdsBuffer : T.StableBuffer<TOTPId>) : [QueryTOTPs] {
-		let queryTOTPs = Buffer.Buffer<QueryTOTPs>(0);
+	public func getTOTPs(totpMap : T.Map<TOTPId, TOTP>, totpIdsBuffer : T.StableBuffer<TOTPId>) : [QueryTOTP] {
+		let queryTOTPs = Buffer.Buffer<QueryTOTP>(0);
 
 		for (id in StableBuffer.vals(totpIdsBuffer)) {
 			switch (Map.get(totpMap, nhash, id)) {

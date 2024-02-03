@@ -15,12 +15,12 @@ export interface QueryPassword {
   'encryptedName' : string,
   'encryptedPass' : string,
 }
-export interface QueryTOTPs {
+export interface QueryTOTP {
   'id' : bigint,
   'encryptedKey' : string,
   'encryptedName' : string,
 }
-export type Result = { 'ok' : Array<QueryTOTPs> } |
+export type Result = { 'ok' : Array<QueryTOTP> } |
   { 'err' : string };
 export type Result_1 = { 'ok' : Array<QueryPassword> } |
   { 'err' : string };
@@ -43,10 +43,10 @@ export interface anon_class_18_1 {
     string
   >,
   'get_initializer' : ActorMethod<[], string>,
-  'get_password' : ActorMethod<[], Result_1>,
+  'get_passwords' : ActorMethod<[], Result_1>,
   'get_totps' : ActorMethod<[], Result>,
   'symmetric_key_verification_key' : ActorMethod<[], string>,
   'update_password' : ActorMethod<[QueryPassword], Result_1>,
-  'update_totp' : ActorMethod<[QueryTOTPs], Result>,
+  'update_totp' : ActorMethod<[QueryTOTP], Result>,
 }
 export interface _SERVICE extends anon_class_18_1 {}

@@ -3,6 +3,7 @@ import type { _SERVICE } from '../../../declarations/backend/backend.did';
 import { writable, type Readable } from 'svelte/store';
 import { AuthClient } from '@dfinity/auth-client';
 import { getActor } from './actor';
+// import { encryptionKey } from './stores/encryption-key.store';
 
 export interface AuthStoreData {
 	isAuthenticated: boolean;
@@ -58,6 +59,7 @@ const init = async (): Promise<AuthStore> => {
 					maxTimeToLive: BigInt(7) * BigInt(24) * BigInt(3_600_000_000_000), // 1 week
 					onSuccess: async () => {
 						await sync();
+						// await encryptionKey.updateEncryptedKey();
 						resolve();
 					},
 					onError: reject

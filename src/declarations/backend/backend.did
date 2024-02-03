@@ -8,11 +8,11 @@ type anon_class_18_1 =
    delete_totp: (TOTPId) -> (Result_2);
    encrypted_symmetric_key_for_caller: (blob) -> (text);
    get_initializer: () -> (text);
-   get_password: () -> (Result_1);
+   get_passwords: () -> (Result_1);
    get_totps: () -> (Result);
    symmetric_key_verification_key: () -> (text);
    update_password: (QueryPassword) -> (Result_1);
-   update_totp: (QueryTOTPs) -> (Result);
+   update_totp: (QueryTOTP) -> (Result);
  };
 type TOTPId = nat;
 type Result_4 = 
@@ -38,9 +38,9 @@ type Result_1 =
 type Result = 
  variant {
    err: text;
-   ok: vec QueryTOTPs;
+   ok: vec QueryTOTP;
  };
-type QueryTOTPs = 
+type QueryTOTP = 
  record {
    encryptedKey: text;
    encryptedName: text;

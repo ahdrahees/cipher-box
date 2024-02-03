@@ -64,7 +64,7 @@ module {
 	};
 	public type userMap = Map.Map<Principal, User>;
 
-	public type QueryTOTPs = {
+	public type QueryTOTP = {
 		id : Nat;
 		encryptedKey : Text;
 		encryptedName : Text;

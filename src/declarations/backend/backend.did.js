@@ -21,12 +21,12 @@ export const idlFactory = ({ IDL }) => {
     'ok' : IDL.Vec(QueryPassword),
     'err' : IDL.Text,
   });
-  const QueryTOTPs = IDL.Record({
+  const QueryTOTP = IDL.Record({
     'id' : IDL.Nat,
     'encryptedKey' : IDL.Text,
     'encryptedName' : IDL.Text,
   });
-  const Result = IDL.Variant({ 'ok' : IDL.Vec(QueryTOTPs), 'err' : IDL.Text });
+  const Result = IDL.Variant({ 'ok' : IDL.Vec(QueryTOTP), 'err' : IDL.Text });
   const anon_class_18_1 = IDL.Service({
     'add_password' : IDL.Func([Password], [Result_4], []),
     'add_totp' : IDL.Func([IDL.Text, IDL.Text], [Result_3], []),
@@ -44,11 +44,11 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'get_initializer' : IDL.Func([], [IDL.Text], []),
-    'get_password' : IDL.Func([], [Result_1], []),
+    'get_passwords' : IDL.Func([], [Result_1], []),
     'get_totps' : IDL.Func([], [Result], []),
     'symmetric_key_verification_key' : IDL.Func([], [IDL.Text], []),
     'update_password' : IDL.Func([QueryPassword], [Result_1], []),
-    'update_totp' : IDL.Func([QueryTOTPs], [Result], []),
+    'update_totp' : IDL.Func([QueryTOTP], [Result], []),
   });
   return anon_class_18_1;
 };
