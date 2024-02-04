@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import type { UserConfig } from 'vite';
 import { defineConfig, loadEnv } from 'vite';
+import wasm from 'vite-plugin-wasm';
 
 // npm run dev = local
 // npm run build = local
@@ -41,7 +42,7 @@ const readCanisterIds = ({ prefix }: { prefix?: string }): Record<string, string
 };
 
 const config: UserConfig = {
-	plugins: [sveltekit()],
+	plugins: [sveltekit(), wasm()],
 	build: {
 		target: 'esnext',
 		rollupOptions: {

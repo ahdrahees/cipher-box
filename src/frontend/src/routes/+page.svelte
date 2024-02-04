@@ -1,25 +1,35 @@
 <script lang="ts">
-	import { busyStore } from '@dfinity/gix-components';
+	import { Segment, SegmentButton, IconAdd, IconLockClock } from '@dfinity/gix-components';
+	import { totpStore } from '$lib/stores/totop.store';
+	import AddTotp from '$lib/components/AddTotp/AddTotp.svelte';
 
-	function updateVariable() {
-		busyStore.startBusy({
-			initiator: 'just-making-screen-busy',
-			text: 'You are in traffic jam bitch....'
-		});
-		setTimeout(() => {
-			busyStore.startBusy({
-				initiator: 'hang-on',
-				text: 'Hang tight.. baby 😘'
-			});
-
-			setTimeout(() => {
-				busyStore.stopBusy('just-making-screen-busy');
-				busyStore.stopBusy('hang-on');
-			}, 10000);
-		}, 10000); // Delay in milliseconds
-	}
+	let firstSegmentId = Symbol();
+	let secondSegmentId = Symbol();
+	let selectedSegmentId = firstSegmentId;
 </script>
 
-<button class="primary" on:click={() => updateVariable()}> start Busy</button>
+<div class="segment">
+	<Segment bind:selectedSegmentId>
+		<SegmentButton segmentId={firstSegmentId}
+			><div class="SegmentButtonChild"><IconLockClock /></div>
+		</SegmentButton>
+		<SegmentButton segmentId={secondSegmentId}
+			><div class="SegmentButtonChild"><IconAdd /></div>
+		</SegmentButton>
+	</Segment>
+</div>
+{#if selectedSegmentId === firstSegmentId}
+	<h2>Page1</h2>
+{:else if selectedSegmentId === secondSegmentId}
+	<AddTotp />
+{/if}
 
-<h2>TOTPs Page</h2>
+<style>
+	.SegmentButtonChild {
+		padding-left: 10px;
+	}
+	.segment {
+		display: flex;
+		justify-content: center;
+	}
+</style>

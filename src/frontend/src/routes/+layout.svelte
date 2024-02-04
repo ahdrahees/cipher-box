@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { authStore } from '$lib/auth.store';
+	import { onDestroy } from 'svelte';
 	import {
 		Layout,
 		MenuItem,
@@ -10,11 +11,13 @@
 		IconPassword,
 		IconLockClock,
 		Value,
-		BusyScreen
+		BusyScreen,
+		Toasts
 	} from '@dfinity/gix-components';
 
-	import PageBanner from '$lib/PageBanner/PageBanner.svelte';
+	import PageBanner from '$lib/components/PageBanner/PageBanner.svelte';
 	import UserPopoverMenu from '$lib/UserPopoverMenu/UserPopoverMenu.svelte';
+	import { encryptionKey } from '$lib/stores/encryption-key.store';
 
 	let pathname: string;
 	$: ({
@@ -22,6 +25,11 @@
 	} = $page);
 
 	$: pageTitle = $page.url.pathname.startsWith('/pass') ? 'My Passwords' : 'My TOTPs';
+
+	const unsubscribe = authStore.subscribe(
+		async (value) => await encryptionKey.updateEncryptedKey()
+	);
+	onDestroy(unsubscribe);
 </script>
 
 {#if $authStore.isAuthenticated}
@@ -41,6 +49,12 @@
 					<IconPassword />My Passwords
 				</div></MenuItem
 			>
+			<MenuItem href="/settings" selected={pathname.startsWith('/settings')} on:click>
+				<div class="alignMenuItemsIcon">settings</div></MenuItem
+			>
+			<MenuItem href="/test" selected={pathname.startsWith('/test')} on:click>
+				<div class="alignMenuItemsIcon">test</div></MenuItem
+			>
 		</svelte:fragment>
 
 		<Content>
@@ -58,6 +72,7 @@
 	<PageBanner />
 {/if}
 
+<Toasts />
 <BusyScreen />
 
 <style lang="scss" global>
