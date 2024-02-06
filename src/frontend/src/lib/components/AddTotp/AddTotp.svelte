@@ -2,6 +2,8 @@
 	import { Input, Section } from '@dfinity/gix-components';
 	import { totpStore } from '$lib/stores/totop.store';
 
+	export const totpAddSubmit = new CustomEvent('totpAddSubmit');
+
 	let totpKey: string = '';
 	let totpName: string = '';
 
@@ -78,7 +80,12 @@
 				<button
 					class="primary text-center"
 					disabled={buttonDisable}
-					on:click={async () => await totpStore.addTOTP(totpKey, totpName)}>Add</button
+					on:click={async () => {
+						await totpStore.addTOTP(totpKey, totpName);
+						totpKey = '';
+						totpName = '';
+						// dispatchEvent(totpAddSubmit);
+					}}>Add</button
 				>
 			</div>
 		</Section>
@@ -99,7 +106,7 @@
 	}
 
 	.wrapper {
-		background-color: var(--card-background);
+		// background-color: var(--card-background);
 		margin: var(--padding-2x) 0;
 		& p,
 		h3,

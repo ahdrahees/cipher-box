@@ -52,6 +52,7 @@
 		"@dfinity/auth-client": "^0.20.2",
 		"@dfinity/gix-components": "^4.0.0",
 		"ic-vetkd-utils": "file:ic-vetkd-utils-0.1.0.tgz",
+		"one-time-password": "^0.1.6",
 		"vite-plugin-wasm": "^3.3.0"
 	}
 }

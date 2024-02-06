@@ -16,8 +16,9 @@
 	} from '@dfinity/gix-components';
 
 	import PageBanner from '$lib/components/PageBanner/PageBanner.svelte';
-	import UserPopoverMenu from '$lib/UserPopoverMenu/UserPopoverMenu.svelte';
+	import UserPopoverMenu from '$lib/components/UserPopoverMenu/UserPopoverMenu.svelte';
 	import { encryptionKey } from '$lib/stores/encryption-key.store';
+	import { totpStore } from '$lib/stores/totop.store';
 
 	let pathname: string;
 	$: ({
@@ -26,10 +27,22 @@
 
 	$: pageTitle = $page.url.pathname.startsWith('/pass') ? 'My Passwords' : 'My TOTPs';
 
-	const unsubscribe = authStore.subscribe(
-		async (value) => await encryptionKey.updateEncryptedKey()
-	);
+	let fetchWait = true;
+
+	const unsubscribe = authStore.subscribe(async (value) => {
+		await encryptionKey.updateEncryptedKey();
+
+		if ($totpStore.encryptedTotps.length === 0 && $authStore.isAuthenticated) {
+			await totpStore.fetchTOTP();
+			fetchWait = false;
+		} else {
+			// totpStore.sync()
+		}
+	});
 	onDestroy(unsubscribe);
+
+	const unsubscribe2 = totpStore.subscribe(async (value) => '');
+	onDestroy(unsubscribe2);
 </script>
 
 {#if $authStore.isAuthenticated}
@@ -61,7 +74,9 @@
 			<HeaderTitle slot="title"><Value>{pageTitle}</Value></HeaderTitle>
 
 			<main>
-				<slot />
+				{#if !fetchWait}
+					<slot />
+				{/if}
 			</main>
 			<div class="userPopoverMenu" slot="toolbar-end">
 				<UserPopoverMenu />
