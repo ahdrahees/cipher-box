@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Input, Section } from '@dfinity/gix-components';
 	import { totpStore } from '$lib/stores/totop.store';
+	import { encryptionKey } from '$lib/stores/encryption-key.store';
 
 	export const totpAddSubmit = new CustomEvent('totpAddSubmit');
 
@@ -12,7 +13,7 @@
 	let messageforKey = '';
 
 	function validateInputName() {
-		if ($totpStore === null) {
+		if ($encryptionKey === null) {
 			messageforKey = 'No symmetric key to encrypt';
 		}
 		if (totpName.length < 1) {
@@ -30,7 +31,7 @@
 	}
 
 	function validateInputKey() {
-		if ($totpStore === null) {
+		if ($encryptionKey === null) {
 			messageforKey = 'No symmetric key to encrypt';
 		}
 		if (totpKey.length < 16) {
@@ -59,6 +60,7 @@
 					placeholder="Accout name"
 					minLength={1}
 					on:nnsInput={validateInputName}
+					autocomplete="off"
 				>
 					<svelte:fragment slot="label">Account name</svelte:fragment>
 				</Input>
@@ -72,7 +74,9 @@
 					placeholder="Your key"
 					minLength={16}
 					on:nnsInput={validateInputKey}
-					><svelte:fragment slot="label">Your key</svelte:fragment>
+					autocomplete="off"
+				>
+					<svelte:fragment slot="label">Your key</svelte:fragment>
 				</Input>
 				{#if messageforKey.length > 1}
 					<p class="messageStyle">{messageforKey}</p>
@@ -106,7 +110,6 @@
 	}
 
 	.wrapper {
-		// background-color: var(--card-background);
 		margin: var(--padding-2x) 0;
 		& p,
 		h3,

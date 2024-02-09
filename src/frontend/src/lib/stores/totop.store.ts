@@ -1,5 +1,5 @@
 import { get, writable, type Writable } from 'svelte/store';
-import type { QueryTOTP, TOTPId } from '../../../../declarations/backend/backend.did';
+import type { QueryTOTP, TOTPId } from '../../../../declarations/backend/backend.did.d.ts';
 import { addTotp, deleteTotp, getTotps, updateTotp } from '$lib/api';
 import { busyStore, toastsStore } from '@dfinity/gix-components';
 import { encryptionKey } from './encryption-key.store';
@@ -29,7 +29,7 @@ interface TOTPStore extends Writable<TOTPData> {
 	addTOTP: (totpKey: string, totpName: string) => Promise<void>;
 	deleteTOTP: (totpId: TOTPId) => Promise<void>;
 	updateTOTP: (totp: UpdateTotp) => Promise<void>;
-	// storeOnLocalStorage, restorefromLocalStorage
+	// encrypted totp data storeOnLocalStorage, restorefromLocalStorage
 }
 const init = async (): Promise<TOTPStore> => {
 	const { set, update, subscribe } = writable<TOTPData>({ encryptedTotps: [], decryptedTotps: [] });
@@ -88,7 +88,7 @@ const init = async (): Promise<TOTPStore> => {
 						encryptedTotps: [...totpData.encryptedTotps, { id, encryptedKey, encryptedName }],
 						decryptedTotps: [...totpData.decryptedTotps, { id, key: totpKey, name: totpName }]
 					}));
-					toastsStore.show({ text: 'New TOTP Added', level: 'success', duration: 10000 });
+					toastsStore.show({ text: 'New TOTP added', level: 'success', duration: 10000 });
 				} else if ('err' in result) {
 					toastsStore.show({ text: result.err, level: 'error' });
 				}
@@ -204,7 +204,7 @@ async function encryptKeyandName(
 		iv_and_encryptedName.set(iv_forName, 0);
 		iv_and_encryptedName.set(encryptedName_uint8Array, iv_forName.length);
 
-		// Step 7: Convert the combined array to a hexadecimal string and call add_totp backend
+		// Step 7: Convert the combined array to a hexadecimal string
 		const encryptedKey = hex_encode(iv_and_encryptedKey);
 		const encryptedName = hex_encode(iv_and_encryptedName);
 

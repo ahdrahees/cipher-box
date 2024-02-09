@@ -1,5 +1,6 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
+import type { IDL } from '@dfinity/candid';
 
 export type canister_id = Principal;
 export type vetkd_curve = { 'bls12_381' : null };
@@ -26,3 +27,5 @@ export interface _SERVICE {
     { 'public_key' : Uint8Array | number[] }
   >,
 }
+export declare const idlFactory: IDL.InterfaceFactory;
+export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];

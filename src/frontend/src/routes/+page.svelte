@@ -37,27 +37,28 @@
 	});
 </script>
 
-{#await waitForFetch() then _}
-	<div class="segment">
-		<Segment bind:selectedSegmentId>
-			<SegmentButton segmentId={firstSegmentId}
-				><div class="SegmentButtonChild"><IconLockClock /></div>
-			</SegmentButton>
-			<SegmentButton segmentId={secondSegmentId}
-				><div class="SegmentButtonChild"><IconAdd /></div>
-			</SegmentButton>
-		</Segment>
-	</div>
+<!-- {#await waitForFetch() then _} -->
+<div class="segment">
+	<Segment bind:selectedSegmentId>
+		<SegmentButton segmentId={firstSegmentId}
+			><div class="SegmentButtonChild"><IconLockClock /></div>
+		</SegmentButton>
+		<SegmentButton segmentId={secondSegmentId}
+			><div class="SegmentButtonChild"><IconAdd /></div>
+		</SegmentButton>
+	</Segment>
+</div>
 
-	{#if selectedSegmentId === firstSegmentId}
-		<ProgressBarTotp />
-		{#each $totpStore.decryptedTotps as totps}
-			<CardTotp decryptedTotp={totps} />
-		{/each}
-	{:else if selectedSegmentId === secondSegmentId}
-		<AddTotp />
-	{/if}
-{/await}
+{#if selectedSegmentId === firstSegmentId}
+	<ProgressBarTotp />
+	{#each $totpStore.decryptedTotps as totps}
+		<CardTotp decryptedTotp={totps} />
+	{/each}
+{:else if selectedSegmentId === secondSegmentId}
+	<AddTotp />
+{/if}
+
+<!-- {/await} -->
 
 <style lang="scss" global>
 	.SegmentButtonChild {

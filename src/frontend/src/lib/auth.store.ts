@@ -1,10 +1,8 @@
 import { type Identity, type ActorSubclass, AnonymousIdentity } from '@dfinity/agent';
 import type { _SERVICE } from '../../../declarations/backend/backend.did';
-import { writable, type Readable, get } from 'svelte/store';
+import { writable, type Readable } from 'svelte/store';
 import { AuthClient } from '@dfinity/auth-client';
 import { getActor } from './actor';
-import { encryptionKey } from './stores/encryption-key.store';
-import { totpStore } from './stores/totop.store';
 
 export interface AuthStoreData {
 	isAuthenticated: boolean;
