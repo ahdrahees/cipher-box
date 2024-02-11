@@ -29,6 +29,7 @@ interface TOTPStore extends Writable<TOTPData> {
 	addTOTP: (totpKey: string, totpName: string) => Promise<void>;
 	deleteTOTP: (totpId: TOTPId) => Promise<void>;
 	updateTOTP: (totp: UpdateTotp) => Promise<void>;
+	sync: () => Promise<void>;
 	// encrypted totp data storeOnLocalStorage, restorefromLocalStorage
 }
 const init = async (): Promise<TOTPStore> => {
@@ -149,6 +150,16 @@ const init = async (): Promise<TOTPStore> => {
 				}
 			} else {
 				toastsStore.show({ text: 'No symmetric key to encrypt', level: 'error' });
+			}
+		},
+		sync: async () => {
+			const result = await getTotps();
+
+			if ('ok' in result) {
+				let decryptedTotps = await decryptTotp(result.ok);
+
+				set({ encryptedTotps: result.ok, decryptedTotps });
+			} else if ('err' in result) {
 			}
 		}
 	};

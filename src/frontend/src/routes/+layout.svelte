@@ -19,30 +19,39 @@
 	import UserPopoverMenu from '$lib/components/UserPopoverMenu/UserPopoverMenu.svelte';
 	import { encryptionKey } from '$lib/stores/encryption-key.store';
 	import { totpStore } from '$lib/stores/totop.store';
+	import { passwordStore } from '$lib/stores/password.store';
 
 	let pathname: string;
 	$: ({
 		url: { pathname }
 	} = $page);
 
-	$: pageTitle = $page.url.pathname.startsWith('/pass') ? 'My Passwords' : 'My TOTPs';
+	$: pageTitle = $page.url.pathname.startsWith('/pass')
+		? 'My Passwords'
+		: $page.url.pathname.startsWith('/settings')
+			? 'Settings'
+			: 'My TOTPs';
 
-	let fetchWait = true;
+	let fetchWait = false;
 
 	const unsubscribe = authStore.subscribe(async (value) => {
 		await encryptionKey.updateEncryptedKey();
 
 		if ($totpStore.encryptedTotps.length === 0 && $authStore.isAuthenticated) {
+			fetchWait = true;
 			await totpStore.fetchTOTP();
 			fetchWait = false;
 		} else {
-			// totpStore.sync()
+			// await totpStore.sync();
+		}
+
+		if ($passwordStore.encryptedPasswords.length === 0 && $authStore.isAuthenticated) {
+			await passwordStore.fetchPass();
+		} else {
+			// await passwordStore.sync();
 		}
 	});
 	onDestroy(unsubscribe);
-
-	const unsubscribe2 = totpStore.subscribe(async (value) => '');
-	onDestroy(unsubscribe2);
 </script>
 
 {#if $authStore.isAuthenticated}
@@ -61,12 +70,6 @@
 				<div class="alignMenuItemsIcon">
 					<IconPassword />My Passwords
 				</div></MenuItem
-			>
-			<MenuItem href="/settings" selected={pathname.startsWith('/settings')} on:click>
-				<div class="alignMenuItemsIcon">settings</div></MenuItem
-			>
-			<MenuItem href="/test" selected={pathname.startsWith('/test')} on:click>
-				<div class="alignMenuItemsIcon">test</div></MenuItem
 			>
 		</svelte:fragment>
 

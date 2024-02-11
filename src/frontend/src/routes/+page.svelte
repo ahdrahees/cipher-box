@@ -1,17 +1,8 @@
 <script lang="ts">
-	import {
-		Segment,
-		SegmentButton,
-		IconAdd,
-		IconLockClock,
-		toastsStore
-	} from '@dfinity/gix-components';
+	import { Segment, SegmentButton, IconAdd, IconLockClock } from '@dfinity/gix-components';
 	import AddTotp from '$lib/components/AddTotp/AddTotp.svelte';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { totpStore } from '$lib/stores/totop.store';
-	import { encryptionKey } from '$lib/stores/encryption-key.store';
-	import { get } from 'svelte/store';
-	import { hex_decode } from '$lib/utils/hex.utils';
 
 	import CardTotp from '$lib/components/CardTotp/CardTotp.svelte';
 	import ProgressBarTotp from '$lib/components/ProgressBarTotp/ProgressBarTotp.svelte';
@@ -20,8 +11,6 @@
 	let firstSegmentId = Symbol();
 	let secondSegmentId = Symbol();
 	$: selectedSegmentId = secondSegmentId;
-
-	// const secret = 'RTNMUXLMSCHUD2WXQZ36LY4XQV2NLF7F'; // Replace with your actual secret key
 
 	async function waitForFetch() {
 		if ($totpStore.encryptedTotps.length === 0 && $authStore.isAuthenticated) {

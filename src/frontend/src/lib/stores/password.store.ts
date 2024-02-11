@@ -1,4 +1,4 @@
-import { get, writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable, type Updater } from 'svelte/store';
 import {
 	type PassId,
 	type Password,
@@ -11,7 +11,7 @@ import { encryptionKey } from './encryption-key.store';
 import { authStore } from '$lib/auth.store';
 
 type EncryptedPasswords = Array<QueryPassword>;
-type DecryptedPasswords = Array<DecryptedPassword>;
+export type DecryptedPasswords = Array<DecryptedPassword>;
 
 type DecryptedPassword = {
 	id: bigint;
@@ -44,6 +44,7 @@ interface PasswordStore extends Writable<PasswordStoreData> {
 	}) => Promise<void>;
 	deletePass: (passId: PassId) => Promise<void>;
 	updatePass: (password: UpdatePassArg) => Promise<void>;
+	sync: () => Promise<void>;
 	// storeOnLocalStorage, restorefromLocalStorage
 }
 
@@ -125,17 +126,21 @@ const init = async (): Promise<PasswordStore> => {
 		updatePass: async (password: UpdatePassArg) => {
 			if (get(encryptionKey) !== null) {
 				busyStore.startBusy({ initiator: 'updatePass', text: 'Encrypting...' });
+
 				const encryptedPassword = await encryptPassword(password);
+
 				busyStore.startBusy({ initiator: 'updatePass', text: 'Updating...' });
+
 				const result = await updatePassword({ ...password, ...encryptedPassword });
+
 				busyStore.stopBusy('updatePass');
 
 				if ('ok' in result) {
 					update((passwordData) => {
 						let decryptedPasswords = passwordData.decryptedPasswords;
-						const index = decryptedPasswords.findIndex((decryptedPass) => {
-							decryptedPass.id === password.id;
-						});
+						const index = decryptedPasswords.findIndex(
+							(decryptPass) => decryptPass.id === password.id
+						);
 						decryptedPasswords[index] = password;
 
 						return { encryptedPasswords: result.ok, decryptedPasswords };
@@ -145,6 +150,15 @@ const init = async (): Promise<PasswordStore> => {
 				}
 			} else {
 				toastsStore.show({ text: 'No symmetric key to encrypt', level: 'error' });
+			}
+		},
+		sync: async () => {
+			const result = await getPasswords();
+
+			if ('ok' in result) {
+				const decryptedPasswords = await decryptPasswords(result.ok);
+				set({ encryptedPasswords: result.ok, decryptedPasswords });
+			} else if ('err' in result) {
 			}
 		}
 	};
