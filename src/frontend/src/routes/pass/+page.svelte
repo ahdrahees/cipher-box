@@ -46,8 +46,6 @@
 			})
 		);
 
-		console.log('searchResult', $searchResult);
-
 		await tick(); // Wait for Svelte to update the DOM
 	}
 
