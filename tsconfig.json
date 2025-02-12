@@ -12,7 +12,8 @@
 		"moduleResolution": "bundler",
 		"target": "ES2022",
 		"module": "ESNext"
-	}
+	},
+	"exclude": ["node_modules/.svelte2tsx-language-server-files"]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
