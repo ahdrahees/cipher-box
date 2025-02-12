@@ -5,7 +5,7 @@ import { Actor, HttpAgent, type ActorSubclass, type Identity } from '@dfinity/ag
 const getAgent = async (identity: Identity): Promise<HttpAgent> => {
 	// const host = (import.meta.env.MODE === 'development') ? 'http://localhost:8080/' : 'https://icp0.io';
 	const host = import.meta.env.VITE_HOST;
-	const agent: HttpAgent = new HttpAgent({ identity, host });
+	const agent: HttpAgent = HttpAgent.createSync({ identity, host });
 
 	if (import.meta.env.DEV) {
 		await agent.fetchRootKey();
